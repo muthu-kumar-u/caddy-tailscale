@@ -1,0 +1,16 @@
+// Merge into your existing policy; replace identities before applying.
+// Remove any broad allow-all grants that bypass these restrictions.
+{
+  "groups": {
+    "group:operators": ["operator@your-domain.example"],
+    "group:viewers": ["viewer@your-domain.example"],
+  },
+  "tagOwners": { "tag:application-server": ["group:operators"] },
+  "grants": [
+    { "src": ["group:operators"], "dst": ["tag:application-server"], "ip": ["tcp:22", "tcp:443"] },
+    { "src": ["group:viewers"], "dst": ["tag:application-server"], "ip": ["tcp:443"] },
+  ],
+  "tests": [
+    { "src": "viewer@your-domain.example", "accept": ["tag:application-server:443"], "deny": ["tag:application-server:22", "tag:application-server:3000"] },
+  ],
+}

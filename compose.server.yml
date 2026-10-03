@@ -1,0 +1,18 @@
+services:
+  edge:
+    image: ${CADDY_IMAGE:?Set an accepted Caddy image digest}
+    restart: unless-stopped
+    environment:
+      APP_DOMAIN: ${APP_DOMAIN:?Set your DNS hostname}
+      TLS_EMAIL: ${TLS_EMAIL:?Set a monitored email}
+      UPSTREAM: ${UPSTREAM:?Set the application service and port}
+    ports: ['80:80', '443:443']
+    volumes: [caddy_data:/data, caddy_config:/config]
+    networks: [application]
+networks:
+  application:
+    external: true
+    name: ${APP_NETWORK:-application_network}
+volumes:
+  caddy_data:
+  caddy_config:
